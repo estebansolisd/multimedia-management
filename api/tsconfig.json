@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+      "target": "ES6",
+      "module": "commonjs",
+      "strict": true,
+      "types": ["jest"],
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "outDir": "./dist",
+      "experimentalDecorators": true,
+    },
+    "include": ["src"],
+    "exclude": ["node_modules"]
+  }
