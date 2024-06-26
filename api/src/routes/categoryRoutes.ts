@@ -1,29 +1,10 @@
-import { Request, Response } from "express";
-import Category from "../models/Category";
+import { Router } from 'express';
+import { createCategory, getCategories } from '../controllers/categoryController';
+import authMiddleware from '../middlewares/authMiddleware';
 
-export const createCategory = async (req: Request, res: Response) => {
-  const { name, type, thumbnail } = req.body;
+const router = Router();
 
-  try {
-    const existingCategory = await Category.findOne({ name });
-    if (existingCategory) {
-      return res.status(400).json({ message: "Category already exists" });
-    }
+router.post('/', authMiddleware(['admin']), createCategory);
+router.get('/', getCategories);
 
-    const newCategory = new Category({ name, type, thumbnail });
-    await newCategory.save();
-
-    res.status(201).json(newCategory);
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error });
-  }
-};
-
-export const getCategories = async (req: Request, res: Response) => {
-  try {
-    const categories = await Category.find();
-    res.status(200).json(categories);
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error });
-  }
-};
+export default router;

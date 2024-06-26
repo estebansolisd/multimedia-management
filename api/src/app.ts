@@ -2,6 +2,8 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes';
+import categoryRoutes from './routes/categoryRoutes';
+import themeRoutes from './routes/themeRoutes';
 
 dotenv.config();
 
@@ -14,6 +16,8 @@ mongoose.connect(process.env.MONGO_URI!)
   .catch((err) => console.log(err));
 
 app.use('/api/auth', authRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/themes', themeRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
