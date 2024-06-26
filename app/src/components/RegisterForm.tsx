@@ -1,19 +1,21 @@
-import React, { useState } from "react";
-import { registerUser } from "../services/api";
+import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { registerUser } from '../services/api';
 
 const RegisterForm: React.FC = () => {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState<"reader" | "creator">("reader");
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [role, setRole] = useState<'reader' | 'creator'>('reader');
+  const { setToken } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const data = await registerUser({ username, email, password, role });
-      console.log("Registered:", data);
+      setToken(data.token);
     } catch (error) {
-      console.error("Registration failed:", error);
+      console.error('Registration failed:', error);
     }
   };
 
@@ -54,7 +56,7 @@ const RegisterForm: React.FC = () => {
         <label className="block mb-2">Role</label>
         <select
           value={role}
-          onChange={(e) => setRole(e.target.value as "reader" | "creator")}
+          onChange={(e) => setRole(e.target.value as 'reader' | 'creator')}
           className="border p-2 w-full"
         >
           <option value="reader">Reader</option>

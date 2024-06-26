@@ -1,15 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { fetchContents } from "../services/api";
-
+import React, { useEffect, useState } from 'react';
+import { fetchContents } from '../services/api';
 
 const ContentList: React.FC = () => {
-  const [contents, setContents] = useState<Content[]>([]);
+  const [contents, setContents] = useState<any[]>([]);
 
   useEffect(() => {
     const loadContents = async () => {
-      const data = await fetchContents();
-      setContents(data);
+      try {
+        const data = await fetchContents();
+        setContents(data);
+      } catch (error) {
+        console.error('Failed to fetch contents:', error);
+      }
     };
+
     loadContents();
   }, []);
 
@@ -17,7 +21,7 @@ const ContentList: React.FC = () => {
     <div className="p-4">
       <h2 className="text-2xl mb-4">Content List</h2>
       <ul>
-        {contents.map((content) => (
+        {contents.map(content => (
           <li key={content._id} className="mb-2">
             <h3 className="text-xl">{content.title}</h3>
             <p>{content.description}</p>

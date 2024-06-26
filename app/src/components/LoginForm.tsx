@@ -1,17 +1,19 @@
-import React, { useState } from "react";
-import { loginUser } from "../services/api";
+import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { loginUser } from '../services/api';
 
 const LoginForm: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { setToken } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const data = await loginUser({ email, password });
-      console.log("Logged in:", data);
+      setToken(data.token);
     } catch (error) {
-      console.error("Login failed:", error);
+      console.error('Login failed:', error);
     }
   };
 
