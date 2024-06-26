@@ -1,5 +1,4 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
-
 interface AuthContextType {
   token: string | null;
   setToken: (token: string | null) => void;
@@ -12,9 +11,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const saveToken = (token: string | null) => {
     if (token) {
-      localStorage.setItem('token', token);
+      localStorage.setItem('multimedia-token', token);
     } else {
-      localStorage.removeItem('token');
+      localStorage.removeItem('multimedia-token');
     }
     setToken(token);
   };
