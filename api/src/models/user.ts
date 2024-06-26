@@ -1,33 +1,17 @@
-import { ObjectId } from "mongodb";
-import db from "../config/database";
-import { User } from "../interfaces/userInterface";
+import { Schema, model, Document } from 'mongoose';
 
+export interface IUser extends Document {
+  username: string;
+  email: string;
+  password: string;
+  role: 'admin' | 'reader' | 'creator';
+}
 
-const collection = "users";
+const userSchema = new Schema({
+  username: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  role: { type: String, enum: ['admin', 'reader', 'creator'], required: true },
+});
 
-export const getUsers = async (): Promise<User[]> => {
-  const users = await db.collection<User>("users").find().toArray();
-  return users;
-};
-
-export const getUserById = async (id: string): Promise<User | null> => {
-  const user = await db.collection<User>(collection).findOne({ id });
-  return user;
-};
-
-export const createUser = async (user: User): Promise<ObjectId | null> => {
-  const result = await db.collection<User>("users").insertOne(user);
-  return result.insertedId ? result.insertedId : null;
-};
-
-export const updateUser = async (user: User): Promise<boolean> => {
-  const result = await db
-    .collection<User>(collection)
-    .updateOne({ id: user.id }, { $set: user });
-  return result.modifiedCount === 1;
-};
-
-export const deleteUser = async (id: string): Promise<boolean> => {
-  const result = await db.collection<User>(collection).deleteOne({ id });
-  return result.deletedCount === 1;
-};
+export default model<IUser>('User', userSchema);

@@ -1,21 +1,21 @@
 import express from 'express';
-import cors from "cors";
-import { userRouter } from './routes/userRoutes';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import authRoutes from './routes/authRoutes';
+
+dotenv.config();
 
 const app = express();
 
-const corsOptions = {
-  origin: 'http://localhost:5173',
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true,
-  optionsSuccessStatus: 204
-};
-
-// Use CORS middleware with options
-app.use(cors(corsOptions));
-
 app.use(express.json());
-app.use('/api/users', userRouter);
 
+mongoose.connect(process.env.MONGO_URI!)
+  .then(() => console.log('MongoDB connected'))
+  .catch((err) => console.log(err));
 
-export default app;
+app.use('/api/auth', authRoutes);
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
