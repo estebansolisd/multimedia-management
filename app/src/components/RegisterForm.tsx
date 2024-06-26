@@ -66,10 +66,10 @@ const RegisterForm: React.FC = () => {
           <option value="creator">Creator</option>
         </select>
       </div>
-      <p>
-        ¿Ya tienes una cuenta?
+      <p className="mb-4">
+        Do you have an account ?{" "}
         <a href="/login" className="text-blue-500">
-          Inicia sesión aquí
+          Login here
         </a>
         .
       </p>
