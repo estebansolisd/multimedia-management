@@ -26,6 +26,7 @@ export const getContents = async (req: Request, res: Response) => {
   try {
     const contents = await Content.find()
       .populate("theme")
+      .populate("type")
       .populate("createdBy");
     res.status(200).json(contents);
   } catch (error) {

@@ -1,0 +1,1 @@
+export const VIDEO_FALLBACK = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTo7-SBSZQDSrRDkvdWH-fWwliweGj_wQ-urQ&s";

@@ -1,24 +1,49 @@
-
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ContentList from '../components/ContentList';
-import SearchBar from '../components/SearchBar';
+import debounce from '../utils/debounce';
 
-const HomePage: React.FC = () => {
-  const [query, setQuery] = useState('');
+const Home: React.FC = () => {
+  const [filterValue, setFilterValue] = useState<string>('');
+  const [filterType, setFilterType] = useState<'category' | 'theme'>('category');
   const navigate = useNavigate();
 
-  const handleSearch = (searchQuery: string) => {
-    setQuery(searchQuery);
+  const handleFilterChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setFilterValue(event.target.value);
+    },
+    []
+  );
+
+  const debouncedHandleFilterChange = useMemo(
+    () => debounce(handleFilterChange, 300),
+    [handleFilterChange]
+  );
+
+  const handleFilterTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setFilterType(event.target.value as 'category' | 'theme');
   };
 
   return (
-    <div>
-      <SearchBar onSearch={handleSearch} />
-      <button className="bg-blue-500 text-white p-2" onClick={() => navigate("/create-content")}>Create new content +</button>
-      <ContentList />
+    <div className="p-4">
+      <h1 className="text-2xl mb-4">Home Page</h1>
+      <button className="bg-blue-500 text-white p-2 mb-4" onClick={() => navigate("/create-content")}>Create new content +</button>
+      <div className="mb-4 flex items-center">
+        <label className="mr-2">Search by:</label>
+        <select onChange={handleFilterTypeChange} className="mr-4 p-2 border rounded">
+          <option value="category">Category</option>
+          <option value="theme">Theme</option>
+        </select>
+        <input
+          type="text"
+          placeholder={`Search by ${filterType}`}
+          onChange={debouncedHandleFilterChange}
+          className="p-2 border rounded flex-1"
+        />
+      </div>
+      <ContentList filterType={filterType} filterValue={filterValue} />
     </div>
   );
 };
 
-export default HomePage;
+export default Home;

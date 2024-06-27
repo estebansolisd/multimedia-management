@@ -19,10 +19,10 @@ export interface Content {
   _id?: string;
   title: string;
   description: string;
-  type: string;
+  type: Category;
   content: string;
-  theme: string;
-  createdBy: string;
+  theme: Theme;
+  createdBy: User;
 }
 
 export interface Category {
