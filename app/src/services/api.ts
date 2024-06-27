@@ -1,4 +1,5 @@
-import { Content, User } from "@/types";
+import { TOKEN_KEY } from "@/context/AuthContext";
+import { Category, Content, Theme, User } from "@/types";
 import axios from "axios";
 
 const API_URL = "http://localhost:3000/api";
@@ -12,8 +13,8 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    if (!config.url?.includes("/login") && !config.url?.includes("/register")) {
-      const token = localStorage.getItem("multimedia-token");
+    if (!config.url?.includes("/auth/login") && !config.url?.includes("/auth/register")) {
+      const token = localStorage.getItem(TOKEN_KEY);
       if (token) {
         config.headers["Authorization"] = `Bearer ${token}`;
       }
@@ -24,6 +25,7 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
 
 export const loginUser = async (credentials: {
   email: string;
@@ -40,5 +42,31 @@ export const registerUser = async (user: User) => {
 
 export const fetchContents = async () => {
   const response = await api.get<Content[]>("/contents");
+  return response.data;
+};
+
+export const fetchThemes = async () => {
+  const response = await api.get<Theme[]>("/themes");
+  return response.data;
+};
+
+export const fetchCategories = async () => {
+  const response = await api.get<Category[]>("/categories");
+  return response.data;
+};
+
+export const createContent = async (newContent: Content) => {
+  try {
+    const response = await api.post('/contents', newContent);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+  const response = await api.get<Theme[]>("/themes");
+  return response.data;
+};
+
+export const me = async () => {
+  const response =  await api.post('/auth/me');
   return response.data;
 };

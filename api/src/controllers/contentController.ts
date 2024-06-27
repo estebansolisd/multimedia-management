@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import Content from "../models/Content";
 
 export const createContent = async (req: Request, res: Response) => {
-  const { title, description, type, url, theme, createdBy } = req.body;
+  const { title, description, type, url, theme, createdBy, content } = req.body;
 
   try {
     const newContent = new Content({
@@ -11,6 +11,7 @@ export const createContent = async (req: Request, res: Response) => {
       type,
       url,
       theme,
+      content,
       createdBy,
     });
     await newContent.save();

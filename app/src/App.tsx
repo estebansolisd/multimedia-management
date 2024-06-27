@@ -7,11 +7,12 @@ import RegisterPage from "./pages/RegisterPage";
 import HomePage from "./pages/HomePage";
 import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
+import CreateContent from "./components/CreateContent";
 
 const App: React.FC = () => {
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <AuthProvider>
         <div className="min-h-screen bg-gray-100">
           <Header />
           <div className="container mx-auto p-4">
@@ -40,11 +41,19 @@ const App: React.FC = () => {
                   </PrivateRoute>
                 }
               />
+              <Route
+                path="/create-content"
+                element={
+                  <PrivateRoute>
+                    <CreateContent />
+                  </PrivateRoute>
+                }
+              />
             </Routes>
           </div>
         </div>
-      </Router>
-    </AuthProvider>
+      </AuthProvider>
+    </Router>
   );
 };
 

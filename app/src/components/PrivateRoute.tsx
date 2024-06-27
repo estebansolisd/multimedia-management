@@ -3,9 +3,9 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 
 const PrivateRoute: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const { token } = useAuth();
+  const { user } = useAuth();
 
-  return token ? <>{children}</> : <Navigate to="/register" />;
+  return user ? <>{children}</> : <Navigate to="/register" />;
 };
 
 export default PrivateRoute;

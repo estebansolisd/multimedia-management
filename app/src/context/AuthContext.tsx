@@ -1,32 +1,54 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import { User } from '@/types';
+import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { me } from "../services/api"
 interface AuthContextType {
   token: string | null;
   setToken: (token: string | null) => void;
-  logout: (cb: () => void) => void;
+  setUser: (newUser: User) => void;
+  user: User | null;
+  logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const TOKEN_KEY = 'multimedia-token';
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [token, setToken] = useState<string | null>(localStorage.getItem('multimedia-token'));
+  const [user, setUser] = useState<User | null>(null);
+  const navigate = useNavigate();
 
   const saveToken = (token: string | null) => {
     if (token) {
-      localStorage.setItem('multimedia-token', token);
+      localStorage.setItem(TOKEN_KEY, token);
     } else {
-      localStorage.removeItem('multimedia-token');
+      localStorage.removeItem(TOKEN_KEY);
     }
     setToken(token);
   };
 
-  const logout = (cbRedirect: () => void) => {
+  const logout = () => {
     setToken(null);
-    localStorage.removeItem('multimedia-token');
-    cbRedirect();
+    localStorage.removeItem(TOKEN_KEY);
+    navigate("/login")
   }
 
+  useEffect(() => {
+    async function verifyToken(){
+      try {
+        const { user } = await me();
+        setUser(user);
+      } catch (err) {
+        logout();
+      }
+    }
+  
+    verifyToken();
+  }, [])
+  
+
   return (
-    <AuthContext.Provider value={{ token, setToken: saveToken, logout }}>
+    <AuthContext.Provider value={{ token, setToken: saveToken, logout, setUser, user }}>
       {children}
     </AuthContext.Provider>
   );

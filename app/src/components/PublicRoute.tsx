@@ -3,10 +3,9 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 
 const PublicRoute: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const { token } = useAuth();
-console.log(token, "token");
+  const { user } = useAuth();
 
-  return !token ? <>{children}</> : <Navigate to="/" />;
+  return !user ? <>{children}</> : <Navigate to="/" />;
 };
 
 export default PublicRoute;

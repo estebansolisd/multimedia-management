@@ -6,7 +6,7 @@ import { loginUser } from '../services/api';
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { setToken } = useAuth();
+  const { setToken, setUser } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -14,6 +14,7 @@ const LoginForm: React.FC = () => {
     try {
       const data = await loginUser({ email, password });
       setToken(data.token);
+      setUser(data.user);
       navigate("/");
     } catch (error) {
       console.error('Login failed:', error);

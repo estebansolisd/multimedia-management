@@ -10,6 +10,9 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
+RUN npm install -g ts-node typescript mongoose
+
+
 # Copy the rest of the application code
 COPY . .
 
@@ -19,5 +22,4 @@ RUN npm run build
 # Expose the port the app runs on
 EXPOSE 3000
 
-# Define the command to run the app
-CMD ["node", "dist/app.js"]
+CMD ts-node src/seeds/seed.ts && node dist/app.js

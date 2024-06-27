@@ -6,7 +6,7 @@ interface AuthRequest extends Request {
   user?: IUser;
 }
 
-const authMiddleware = (roles: string[]) => async (req: AuthRequest, res: Response, next: NextFunction) => {
+const authMiddleware = (roles: string[] = []) => async (req: AuthRequest, res: Response, next: NextFunction) => {
   const token = req.header('Authorization')?.replace('Bearer ', '');
 
   if (!token) {
@@ -20,7 +20,7 @@ const authMiddleware = (roles: string[]) => async (req: AuthRequest, res: Respon
         req.user = user;
     }
 
-    if (!req.user || !roles.includes(req.user.role)) {
+    if (!req.user || (roles.length && !roles.includes(req.user.role))) {
       return res.status(403).json({ message: 'Forbidden' });
     }
 

@@ -1,13 +1,16 @@
+import { Content } from '@/types';
 import React, { useEffect, useState } from 'react';
 import { fetchContents } from '../services/api';
 
-const ContentList: React.FC = () => {
-  const [contents, setContents] = useState<any[]>([]);
+const ContentList: React.FC = ({ role }: { role: string}) => {
+  const [contents, setContents] = useState<Content[]>([]);
 
   useEffect(() => {
     const loadContents = async () => {
       try {
         const data = await fetchContents();
+        console.log(data, "data");
+        
         setContents(data);
       } catch (error) {
         console.error('Failed to fetch contents:', error);

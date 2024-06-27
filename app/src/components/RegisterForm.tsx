@@ -8,7 +8,7 @@ const RegisterForm: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState<"reader" | "creator">("reader");
-  const { setToken } = useAuth();
+  const { setToken, setUser } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -16,6 +16,7 @@ const RegisterForm: React.FC = () => {
     try {
       const data = await registerUser({ username, email, password, role });
       setToken(data.token);
+      setUser(data.user);
       navigate("/");
     } catch (error) {
       console.error("Registration failed:", error);

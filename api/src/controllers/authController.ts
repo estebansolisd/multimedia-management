@@ -61,3 +61,23 @@ export const login = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server error", error });
   }
 };
+
+export const me = async (req: Request, res: Response) => {
+  const token = req.header('Authorization')?.replace('Bearer ', '');
+
+  if (!token) {
+    return res.status(401).json({ message: 'No token, authorization denied' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: string; };
+    const user = await User.findById(decoded.id).select('-password');
+    if (user) {
+      return res.status(200).json({ token, user });
+    }
+
+    return res.status(403).json({ message: 'Forbidden' });
+  } catch (error) {
+    res.status(401).json({ message: 'Token is not valid', error });
+  }
+};

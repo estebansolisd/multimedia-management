@@ -1,15 +1,10 @@
 import { useAuth } from "@/context/AuthContext";
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Header: React.FC = () => {
   const { token, logout } = useAuth();
-  const navigate = useNavigate();
-  const handleClick = () => {
-    logout(() => {
-      navigate("/login");
-    });
-  };
+
   return (
     <header className="bg-gray-800 text-white p-4 flex justify-between">
       <h1 className="text-xl">Media Management</h1>
@@ -17,7 +12,7 @@ const Header: React.FC = () => {
         {token ? (
           <button
             className="bg-red-700	text-white p-2"
-            onClick={handleClick}
+            onClick={logout}
           >
             Logout
           </button>

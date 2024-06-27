@@ -12,7 +12,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   };
 
   return (
-    <div className="p-4">
+    <div className="py-4">
       <input
         type="text"
         value={query}

@@ -1,28 +1,34 @@
 export interface Theme {
+  _id?: string;
   name: string;
   allowsImages: boolean;
   allowsVideos: boolean;
   allowsTexts: boolean;
 }
 
-export interface Content {
-  title: string;
-  description: string;
-  type: "image" | "video" | "text";
-  url: string;
-  theme: Theme;
-  createdBy: Date;
-}
-
-export interface Category {
-  name: string;
-  type: 'image' | 'video' | 'text';
-  thumbnail: string;
-}
-
+export type Role ='admin' | 'reader' | 'creator'
 export interface User {
+  _id?: string;
   username: string;
   email: string;
   password: string;
-  role: 'admin' | 'reader' | 'creator';
+  role: Role;
 }
+
+export interface Content {
+  _id?: string;
+  title: string;
+  description: string;
+  type: string;
+  content: string;
+  theme: string;
+  createdBy: string;
+}
+
+export interface Category {
+  _id?: string;
+  name: string;
+  type: string;
+  thumbnail: string;
+}
+
