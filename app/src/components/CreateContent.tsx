@@ -44,7 +44,9 @@ const CreateContent: React.FC = () => {
         content,
         createdBy: user?._id!,
       });
-      // navigate("/");
+      if (confirm("Content saved! Do you want to return to the homepage ?")) {
+        navigate("/")
+      }
     } catch (error) {
       console.error(error);
     }
@@ -118,6 +120,7 @@ const CreateContent: React.FC = () => {
               className="min-w-32 p-2"
               required
             >
+              <option value="" disabled hidden selected>Please select an option</option>
               {themes.map((t: any) => (
                 <option key={t._id} value={t._id}>
                   {t.name}
@@ -137,6 +140,7 @@ const CreateContent: React.FC = () => {
               className="min-w-32 p-2"
               required
             >
+              <option value="" disabled hidden selected>Please select an option</option>
               {categories.map((c) => (
                 <option key={c._id} value={c._id}>
                   {c.name}

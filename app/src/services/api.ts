@@ -1,5 +1,5 @@
 import { TOKEN_KEY } from "@/context/AuthContext";
-import { Category, Content, Theme, User } from "@/types";
+import { Category, Content, CreateContent, Theme, User } from "@/types";
 import axios from "axios";
 
 const API_URL = "http://localhost:3000/api";
@@ -55,7 +55,7 @@ export const fetchCategories = async () => {
   return response.data;
 };
 
-export const createContent = async (newContent: Content) => {
+export const createContent = async (newContent: CreateContent) => {
   try {
     const response = await api.post('/contents', newContent);
     return response.data;

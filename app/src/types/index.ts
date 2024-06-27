@@ -15,14 +15,24 @@ export interface User {
   role: Role;
 }
 
-export interface Content {
+interface BaseContent {
   _id?: string;
   title: string;
   description: string;
+}
+
+export interface Content extends BaseContent {
   type: Category;
   content: string;
   theme: Theme;
   createdBy: User;
+}
+
+export interface CreateContent extends BaseContent { 
+  content: string;
+  theme: string;
+  type: string;
+  createdBy: string;
 }
 
 export interface Category {

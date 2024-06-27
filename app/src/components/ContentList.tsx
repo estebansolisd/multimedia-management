@@ -79,9 +79,7 @@ const ContentList: React.FC<ContentListProps> = ({
       "twitch",
     ];
 
-    const iframeOptions = [
-      "dailymotion"
-    ]
+    const iframeOptions = ["dailymotion"];
 
     switch (content.type.type) {
       case "video":
@@ -90,30 +88,61 @@ const ContentList: React.FC<ContentListProps> = ({
             content.content.toLowerCase().includes(pattern)
           )
         ) {
-          return <ReactPlayer url={content.content} width="100%" height="100%" controls />;
+          return (
+            <ReactPlayer
+              url={content.content}
+              width="100%"
+              height="100%"
+              controls
+            />
+          );
         } else if (isVideoUrlWithExtension(content.content.toLowerCase())) {
-          return <video controls src={content.content} className="h-full w-full"></video>;
-        } else if(iframeOptions.some((pattern) => content.content.toLowerCase().includes(pattern))){
-          return <iframe src={content.content} className="h-full w-full"></iframe>
+          return (
+            <video
+              controls
+              src={content.content}
+              className="h-full w-full"
+            ></video>
+          );
+        } else if (
+          iframeOptions.some((pattern) =>
+            content.content.toLowerCase().includes(pattern)
+          )
+        ) {
+          return (
+            <iframe src={content.content} className="h-full w-full"></iframe>
+          );
         }
         return (
-          <img src={VIDEO_FALLBACK} alt={content.title} className="h-full w-full" />
+          <img
+            src={VIDEO_FALLBACK}
+            alt={content.title}
+            className="h-full w-full"
+          />
         );
 
       case "image":
         return (
-          <img src={content.content} alt={content.title} className="h-full w-full" />
+          <img
+            src={content.content}
+            alt={content.title}
+            className="h-full w-full"
+          />
         );
       case "text":
         return (
           <div>
-            <p className="text-justify">{content.content.substring(0, 200)}...</p>
-            <button
-              onClick={() => handleShowMore(content)}
-              className="text-blue-500 hover:underline"
-            >
-              Show more
-            </button>
+            <p className="text-justify">
+              {content.content.substring(0, 200)}...
+            </p>
+            {content.content.length >= 200 && (
+              <button
+                onClick={() => handleShowMore(content)}
+                className="text-blue-500 hover:underline"
+              >
+                Show more
+              </button>
+            )}
           </div>
         );
       default:
@@ -141,11 +170,12 @@ const ContentList: React.FC<ContentListProps> = ({
       <div className="min-h-[300px]">
         <ul className="flex flex-wrap gap-4">
           {currentContents.map((content) => (
-            <li key={content._id} className="bg-white shadow-md rounded-md p-4 w-full md:w-[48  %] lg:w-[32%]">
+            <li
+              key={content._id}
+              className="bg-white shadow-md rounded-md p-4 w-full md:w-[48  %] lg:w-[32%]"
+            >
               <h3 className="text-xl mb-2">{content.title}</h3>
-              <div className="h-[300px]">
-                {renderContent(content)}
-              </div>
+              <div className="h-[300px]">{renderContent(content)}</div>
               <p>Credits: {(content.createdBy as User).username}</p>
             </li>
           ))}
