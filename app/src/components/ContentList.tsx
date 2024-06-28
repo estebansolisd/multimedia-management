@@ -1,4 +1,4 @@
-import { Content, User } from "@/types";
+import { Content } from "@/types";
 import React, { useEffect, useMemo, useState } from "react";
 import { fetchContents } from "../services/api";
 import ReactPlayer from "react-player";
@@ -21,7 +21,6 @@ const ContentList: React.FC<ContentListProps> = ({
   const [contentsPerPage] = useState<number>(10);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [selectedContent, setSelectedContent] = useState<Content | null>(null);
-console.log(contents, "contents");
 
   const categoriesContentCounter = useMemo(
     () =>
@@ -77,6 +76,7 @@ console.log(contents, "contents");
     );
   });
 
+
   const indexOfLastContent = currentPage * contentsPerPage;
   const indexOfFirstContent = indexOfLastContent - contentsPerPage;
   const currentContents = filteredContents.slice(
@@ -87,8 +87,6 @@ console.log(contents, "contents");
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   const renderContent = (content: Content) => {
-    console.log(content);
-
     const reactPlayerCompatibleList = [
       "soundcloud",
       "youtube",
@@ -178,31 +176,54 @@ console.log(contents, "contents");
     }
   };
 
+  const groupedContents = useMemo(() => {
+    return currentContents.reduce((acc, content) => {
+      if (!acc[content.category.type]) {
+        acc[content.category.type] = {};
+      }
+      if (!acc[content.category.type][content.theme.name]) {
+        acc[content.category.type][content.theme.name] = [];
+      }
+      acc[content.category.type][content.theme.name].push(content);
+      return acc;
+    }, {} as Record<string, Record<string, Content[]>>);
+  }, [currentContents]);
+
+
+
   return (
     <div>
-      <h2 className="text-2xl mb-4">Content List</h2>
+      <h2 className="text-2xl mb-4 font-bold">Content List</h2>
       <div className="mb-4 flex gap-4">
         {Object.keys(categoriesContentCounter).map((k) => (
-          <span className="badge">
+          <span key={k} className="badge">
             {categoriesContentCounter[k].name}:{" "}
             {categoriesContentCounter[k].count}
           </span>
         ))}
       </div>
-      <div className="min-h-[300px]">
-        <ul className="flex flex-wrap gap-4">
-          {currentContents.map((content) => (
-            <li
-              key={content._id}
-              className="bg-white shadow-md rounded-md p-4 w-full md:w-[48  %] lg:w-[32%]"
-            >
-              <h3 className="text-xl mb-2">{content.title}</h3>
-              <div className="h-[300px]">{renderContent(content)}</div>
-              <p>Credits: {content.createdBy.username}</p>
-            </li>
+      {Object.keys(groupedContents).map((categoryType) => (
+        <div key={categoryType} className="mb-8">
+          <h3 className="text-xl mb-2 font-semibold capitalize">Category: {categoryType}</h3>
+          {Object.keys(groupedContents[categoryType]).map((themeName) => (
+            <div key={themeName} className="mb-4">
+              <h4 className="text-lg mb-2 font-medium capitalize">Theme: {themeName}</h4>
+              <ul className="flex flex-wrap gap-4">
+                {groupedContents[categoryType][themeName].map((content) => (
+                  <li
+                    key={content._id}
+                    className="bg-white shadow-md rounded-md p-4 w-full md:w-[48%] lg:w-[32%]"
+                  >
+                    <h3 className="text-xl mb-2">{content.title}</h3>
+                    <div className="h-[300px]">{renderContent(content)}</div>
+                    <p>Credits: {content.createdBy.username}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
-        </ul>
-      </div>
+        </div>
+      ))}
       <Pagination
         currentPage={currentPage}
         totalPages={Math.ceil(filteredContents.length / contentsPerPage)}

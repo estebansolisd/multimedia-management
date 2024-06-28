@@ -26,7 +26,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl mb-4">Home Page</h1>
+      <h1 className="text-2xl mb-4 font-extrabold">Home Page</h1>
       <div className='flex gap-4'>
         <button className="bg-blue-500 text-white p-2 mb-4" onClick={() => navigate("/create/content")}>Create new content +</button>
         <button className="bg-green-500 text-white p-2 mb-4" onClick={() => navigate("/create/category")}>Create new category +</button>
