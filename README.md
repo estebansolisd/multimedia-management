@@ -30,3 +30,6 @@ creator@creator / 123
 Reader 
 
 reader@reader / 123
+
+## API DOCS
+http://localhost:3000/api-docs/#/
