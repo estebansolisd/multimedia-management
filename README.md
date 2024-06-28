@@ -7,9 +7,7 @@ Requirements:
 
 1. First step
 You shoud have install Docker and run the following command:
-docker compose --env-file ./api/.env up
-
-You should wait like 40 seconds until the seeder is completed because it has to wait the database
+docker-compose up --build
 
 2. Run the app
 
@@ -18,3 +16,17 @@ just go to /app folder and run `npm install` and run `npm run dev`
 
 3. In both folder if you want to run the test 
 Just run `npm run test`
+
+4. Users pre-registered
+
+Admin
+
+admin@admin / 123
+
+Creator 
+
+creator@creator / 123
+
+Reader 
+
+reader@reader / 123
