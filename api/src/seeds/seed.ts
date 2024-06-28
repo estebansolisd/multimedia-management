@@ -1,12 +1,35 @@
 import mongoose from "mongoose";
 import Theme from "../models/Theme";
 import Category from "../models/Category";
+import User from "../models/User";
+import bcrypt from "bcryptjs";
 
 const seedDatabase = async () => {
   await mongoose.connect(process.env.MONGO_URI!);
   try {
     await Category.deleteMany({});
     await Theme.deleteMany({});
+    await User.deleteMany({});
+    await User.insertMany([
+      {
+        username: "admin",
+        email: "admin@admin.com",
+        password: await bcrypt.hash("123", 12),
+        role: "admin"
+      },
+      {
+        username: "creator",
+        email: "creator@creator.com",
+        password: await bcrypt.hash("123", 12),
+        role: "creator"
+      },
+      {
+        username: "reader",
+        email: "reader@reader.com",
+        password: await bcrypt.hash("123", 12),
+        role: "reader"
+      },
+    ]);
     await Theme.insertMany([
       {
         name: "Sports",

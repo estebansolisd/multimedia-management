@@ -22,7 +22,7 @@ interface BaseContent {
 }
 
 export interface Content extends BaseContent {
-  type: Category;
+  category: Category;
   content: string;
   theme: Theme;
   createdBy: User;
@@ -31,7 +31,7 @@ export interface Content extends BaseContent {
 export interface CreateContent extends BaseContent { 
   content: string;
   theme: string;
-  type: string;
+  category: string;
   createdBy: string;
 }
 

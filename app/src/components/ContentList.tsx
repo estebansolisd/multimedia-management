@@ -1,5 +1,5 @@
 import { Content, User } from "@/types";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { fetchContents } from "../services/api";
 import ReactPlayer from "react-player";
 import Modal from "react-modal";
@@ -21,15 +21,37 @@ const ContentList: React.FC<ContentListProps> = ({
   const [contentsPerPage] = useState<number>(10);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [selectedContent, setSelectedContent] = useState<Content | null>(null);
+console.log(contents, "contents");
+
+  const categoriesContentCounter = useMemo(
+    () =>
+      contents.reduce((acc, content) => {
+        return content.category.type in acc
+          ? {
+              ...acc,
+              [content.category.type]: {
+                ...acc[content.category.type],
+                count: acc[content.category.type].count + 1,
+              },
+            }
+          : {
+              ...acc,
+              [content.category.type]: {
+                count: 1,
+                name: content.category.name,
+              },
+            };
+      }, {} as Record<string, { count: number; name: string }>),
+    [contents]
+  );
 
   useEffect(() => {
-    const loadContents = async () => {
-      try {
-        const data = await fetchContents();
-        setContents(data);
-      } catch (error) {
-        console.error("Failed to fetch contents:", error);
-      }
+    const loadContents = () => {
+      fetchContents()
+        .then((data) => {
+          setContents(data);
+        })
+        .catch((err) => console.error(err, "Failing to fetch contents"));
     };
 
     loadContents();
@@ -49,7 +71,7 @@ const ContentList: React.FC<ContentListProps> = ({
     return (
       !filterValue ||
       (filterType === "category" &&
-        content.type.type.toLowerCase().includes(filterValue.toLowerCase())) ||
+        content.category.type.toLowerCase().includes(filterValue.toLowerCase())) ||
       (filterType === "theme" &&
         content.theme.name.toLowerCase().includes(filterValue.toLowerCase()))
     );
@@ -81,7 +103,7 @@ const ContentList: React.FC<ContentListProps> = ({
 
     const iframeOptions = ["dailymotion"];
 
-    switch (content.type.type) {
+    switch (content.category.type) {
       case "video":
         if (
           reactPlayerCompatibleList.some((pattern) =>
@@ -146,26 +168,26 @@ const ContentList: React.FC<ContentListProps> = ({
           </div>
         );
       default:
-        return null;
+        return (
+          <img
+            src={content.category.thumbnail}
+            alt={content.title}
+            className="h-full w-full"
+          />
+        );
     }
   };
 
   return (
     <div>
       <h2 className="text-2xl mb-4">Content List</h2>
-      <div className="mb-4 flex space-x-4">
-        <span className="badge">
-          Images:{" "}
-          {contents.filter((content) => content.type.type === "image").length}
-        </span>
-        <span className="badge">
-          Videos:{" "}
-          {contents.filter((content) => content.type.type === "video").length}
-        </span>
-        <span className="badge">
-          Texts:{" "}
-          {contents.filter((content) => content.type.type === "text").length}
-        </span>
+      <div className="mb-4 flex gap-4">
+        {Object.keys(categoriesContentCounter).map((k) => (
+          <span className="badge">
+            {categoriesContentCounter[k].name}:{" "}
+            {categoriesContentCounter[k].count}
+          </span>
+        ))}
       </div>
       <div className="min-h-[300px]">
         <ul className="flex flex-wrap gap-4">
@@ -176,7 +198,7 @@ const ContentList: React.FC<ContentListProps> = ({
             >
               <h3 className="text-xl mb-2">{content.title}</h3>
               <div className="h-[300px]">{renderContent(content)}</div>
-              <p>Credits: {(content.createdBy as User).username}</p>
+              <p>Credits: {content.createdBy.username}</p>
             </li>
           ))}
         </ul>

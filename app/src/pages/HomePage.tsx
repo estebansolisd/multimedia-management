@@ -27,7 +27,12 @@ const Home: React.FC = () => {
   return (
     <div className="p-4">
       <h1 className="text-2xl mb-4">Home Page</h1>
-      <button className="bg-blue-500 text-white p-2 mb-4" onClick={() => navigate("/create-content")}>Create new content +</button>
+      <div className='flex gap-4'>
+        <button className="bg-blue-500 text-white p-2 mb-4" onClick={() => navigate("/create/content")}>Create new content +</button>
+        <button className="bg-green-500 text-white p-2 mb-4" onClick={() => navigate("/create/category")}>Create new category +</button>
+        <button className="bg-orange-500 text-white p-2 mb-4" onClick={() => navigate("/create/theme")}>Create new theme +</button>
+
+      </div>
       <div className="mb-4 flex items-center">
         <label className="mr-2">Search by:</label>
         <select onChange={handleFilterTypeChange} className="mr-4 p-2 border rounded">

@@ -62,8 +62,20 @@ export const createContent = async (newContent: CreateContent) => {
   } catch (error) {
     console.error(error);
   }
-  const response = await api.get<Theme[]>("/themes");
+};
+
+export const createCategory = async (newCategory: Category) => {
+  const response = await api.post('/categories', newCategory);
   return response.data;
+};
+
+export const createTheme = async (newTheme: Theme) => {
+  try {
+    const response = await api.post('/themes', newTheme);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 export const me = async () => {

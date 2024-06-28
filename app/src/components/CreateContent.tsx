@@ -11,13 +11,13 @@ const CreateContent: React.FC = () => {
     title: "",
     description: "",
     theme: "",
-    type: "",
+    category: "",
     content: "",
     themes: [] as Theme[],
     categories: [] as Category[],
   });
 
-  const { title, description, theme, type, content, themes, categories } =
+  const { title, description, theme, category, content, themes, categories } =
     createContentState;
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const CreateContent: React.FC = () => {
         title,
         description,
         theme,
-        type,
+        category,
         content,
         createdBy: user?._id!,
       });
@@ -130,12 +130,12 @@ const CreateContent: React.FC = () => {
           </div>
         </div>
         <div>
-          <label htmlFor="type">Select the category of the content</label>
+          <label htmlFor="category">Select the category of the content</label>
           <div>
             <select
-              value={type}
-              id="type"
-              name="type"
+              value={category}
+              id="category"
+              name="category"
               onChange={handleChange}
               className="min-w-32 p-2"
               required
