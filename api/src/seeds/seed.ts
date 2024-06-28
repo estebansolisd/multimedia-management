@@ -3,6 +3,7 @@ import Theme from "../models/Theme";
 import Category from "../models/Category";
 import User from "../models/User";
 import bcrypt from "bcryptjs";
+import Content from "../models/Content";
 
 const seedDatabase = async () => {
   await mongoose.connect(process.env.MONGO_URI!);
@@ -10,6 +11,7 @@ const seedDatabase = async () => {
     await Category.deleteMany({});
     await Theme.deleteMany({});
     await User.deleteMany({});
+    await Content.deleteMany({});
     await User.insertMany([
       {
         username: "admin",

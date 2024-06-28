@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { createContent, fetchThemes, fetchCategories } from "../services/api";
 import { Category, Theme } from "@/types";
+import { captureRejectionSymbol } from "events";
 
 const CreateContent: React.FC = () => {
   const { user } = useAuth();
@@ -17,9 +18,25 @@ const CreateContent: React.FC = () => {
     categories: [] as Category[],
   });
 
+  
+  
   const { title, description, theme, category, content, themes, categories } =
-    createContentState;
+  createContentState;
 
+  const currentTheme = useMemo(() => createContentState.theme ? themes.find(theme  => theme._id === createContentState.theme) : null , [createContentState.theme])
+
+  const filteredCategories = useMemo(() => categories.filter((category) => {
+    if (currentTheme?.allowsImages) {
+      return category.type.includes("image") || category.name.includes("image")
+    }else if (currentTheme?.allowsTexts) {
+      return category.type.includes("text") || category.name.includes("text")
+    }else if (currentTheme?.allowsVideos) {
+      return category.type.includes("video") || category.name.includes("video")
+    } 
+
+    return false;
+  }), [currentTheme, categories])
+  
   useEffect(() => {
     const getData = async () => {
       const newThemes = await fetchThemes();
@@ -129,26 +146,28 @@ const CreateContent: React.FC = () => {
             </select>
           </div>
         </div>
-        <div>
-          <label htmlFor="category">Select the category of the content</label>
+        {!!filteredCategories.length && (
           <div>
-            <select
-              value={category}
-              id="category"
-              name="category"
-              onChange={handleChange}
-              className="min-w-32 p-2"
-              required
-            >
-              <option value="" disabled hidden selected>Please select an option</option>
-              {categories.map((c) => (
-                <option key={c._id} value={c._id}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
+            <label htmlFor="category">Select the category of the content</label>
+            <div>
+              <select
+                value={category}
+                id="category"
+                name="category"
+                onChange={handleChange}
+                className="min-w-32 p-2"
+                required
+              >
+                <option value="" disabled hidden selected>Please select an option</option>
+                {filteredCategories.map((c) => (
+                  <option key={c._id} value={c._id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-        </div>
+        )}
         <div>
           <label htmlFor="content">
             Add the URL of your video, image or text here

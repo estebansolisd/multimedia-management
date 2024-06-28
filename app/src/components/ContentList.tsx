@@ -233,7 +233,7 @@ const ContentList: React.FC<ContentListProps> = ({
           </div>
         ))
       ) : (
-        <div>No result have been found !</div>
+        <div>{filterValue ? "No result have been found !" : "No content added yet !"}</div>
       )}
       <Pagination
         currentPage={currentPage}

@@ -5,7 +5,7 @@ export const createTheme = async (req: Request, res: Response) => {
   const { name, allowsImages, allowsVideos, allowsTexts } = req.body;
 
   try {
-    const existingTheme = await Theme.findOne({ name });
+    const existingTheme = await Theme.findOne({ name: { $regex: new RegExp(name, 'i') } });
     if (existingTheme) {
       return res.status(400).json({ message: 'Theme already exists' });
     }
