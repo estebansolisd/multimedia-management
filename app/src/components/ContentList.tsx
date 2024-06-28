@@ -184,14 +184,17 @@ const ContentList: React.FC<ContentListProps> = ({
   const groupedContents = useMemo(() => {
     return currentContents.reduce((acc, content) => {
       if (!acc[content.category.type]) {
-        acc[content.category.type] = {};
+        acc[content.category.type] = {
+          thumbnail: content.category.thumbnail, // Include thumbnail here
+          themes: {},
+        };
       }
-      if (!acc[content.category.type][content.theme.name]) {
-        acc[content.category.type][content.theme.name] = [];
+      if (!acc[content.category.type].themes[content.theme.name]) {
+        acc[content.category.type].themes[content.theme.name] = [];
       }
-      acc[content.category.type][content.theme.name].push(content);
+      acc[content.category.type].themes[content.theme.name].push(content);
       return acc;
-    }, {} as Record<string, Record<string, Content[]>>);
+    }, {} as Record<string, { thumbnail: string; themes: Record<string, Content[]> }>);
   }, [currentContents]);
 
   return (
@@ -208,32 +211,46 @@ const ContentList: React.FC<ContentListProps> = ({
       {currentContents.length ? (
         Object.keys(groupedContents).map((categoryType) => (
           <div key={categoryType} className="mb-8">
-            <h3 className="text-xl mb-2 font-semibold capitalize">
+            <h4 className="text-xl mb-2 font-medium capitalize">
               Category: {categoryType}
-            </h3>
-            {Object.keys(groupedContents[categoryType]).map((themeName) => (
-              <div key={themeName} className="mb-4">
-                <h4 className="text-lg mb-2 font-medium capitalize">
-                  Theme: {themeName}
-                </h4>
-                <ul className="flex flex-wrap gap-4">
-                  {groupedContents[categoryType][themeName].map((content) => (
-                    <li
-                      key={content._id}
-                      className="bg-white shadow-md rounded-md p-4 w-full md:w-[48%] lg:w-[32%]"
-                    >
-                      <h3 className="text-xl mb-2">{content.title}</h3>
-                      <div className="h-[300px]">{renderContent(content)}</div>
-                      <p>Credits: {content.createdBy.username}</p>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+            </h4>
+            <img
+              onError={(e) => (e.currentTarget.src = VIDEO_FALLBACK)}
+              src={groupedContents[categoryType].thumbnail}
+              alt={categoryType}
+              className="mb-4 w-32 h-32 object-cover"
+            />
+            {Object.keys(groupedContents[categoryType].themes).map(
+              (themeName) => (
+                <div key={themeName} className="mb-4">
+                  <h4 className="text-lg mb-2"> Theme: {themeName}</h4>
+                  <ul className="flex flex-wrap gap-4">
+                    {groupedContents[categoryType].themes[themeName].map(
+                      (content) => (
+                        <li
+                          key={content._id}
+                          className="bg-white shadow-md rounded-md p-4 w-full md:w-[48%] lg:w-[32%]"
+                        >
+                          <h3 className="text-xl mb-2">{content.title}</h3>
+                          <div className="h-[300px]">
+                            {renderContent(content)}
+                          </div>
+                          <p>Credits: {content.createdBy.username}</p>
+                        </li>
+                      )
+                    )}
+                  </ul>
+                </div>
+              )
+            )}
           </div>
         ))
       ) : (
-        <div>{filterValue ? "No result have been found !" : "No content added yet !"}</div>
+        <div>
+          {filterValue
+            ? "No result have been found !"
+            : "No content added yet !"}
+        </div>
       )}
       <Pagination
         currentPage={currentPage}
