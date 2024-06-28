@@ -2,7 +2,69 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User";
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - username
+ *         - email
+ *         - password
+ *         - role
+ *       properties:
+ *         username:
+ *           type: string
+ *           description: The username of the user
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: The email address of the user
+ *         password:
+ *           type: string
+ *           format: password
+ *           description: The password of the user
+ *         role:
+ *           type: string
+ *           description: The role of the user (e.g., admin, user)
+ *       example:
+ *         username: testuser
+ *         email: testuser@example.com
+ *         password: password123
+ *         role: user
+ */
 
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                   description: JWT token for authentication
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Username or email already exists
+ *       500:
+ *         description: Server error
+ */
 export const register = async (req: Request, res: Response) => {
   const { username, email, password, role } = req.body;
 
@@ -35,7 +97,48 @@ export const register = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server error", error });
   }
 };
-
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: Login with existing user credentials
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: The email address of the user
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 description: The password of the user
+ *     responses:
+ *       200:
+ *         description: User logged in successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                   description: JWT token for authentication
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Invalid credentials
+ *       500:
+ *         description: Server error
+ */
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
@@ -61,6 +164,35 @@ export const login = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server error", error });
   }
 };
+
+/**
+ * @swagger
+ * /api/auth/me:
+ *   get:
+ *     summary: Get current user profile
+ *     tags: [Authentication]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Current user profile retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                   description: JWT token for authentication
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
+ *       401:
+ *         description: No token, authorization denied
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Server error
+ */
 
 export const me = async (req: Request, res: Response) => {
   const token = req.header('Authorization')?.replace('Bearer ', '');

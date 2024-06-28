@@ -6,6 +6,10 @@ import categoryRoutes from './routes/categoryRoutes';
 import themeRoutes from './routes/themeRoutes';
 import contentRoutes from './routes/contentRoutes';
 import cors from 'cors';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpecs from './swaggerConfig';
+
+
 
 dotenv.config();
 
@@ -29,6 +33,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/themes', themeRoutes);
 app.use('/api/contents', contentRoutes);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
