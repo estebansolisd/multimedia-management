@@ -6,7 +6,7 @@ import debounce from "../utils/debounce";
 
 const Home: React.FC = () => {
   const [filterValue, setFilterValue] = useState<string>("");
-  const [filterType, setFilterType] = useState<"category" | "theme">(
+  const [filterType, setFilterType] = useState<"category" | "theme" | "content">(
     "category"
   );
   const { user } = useAuth();
@@ -27,7 +27,7 @@ const Home: React.FC = () => {
   const handleFilterTypeChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
-    setFilterType(event.target.value as "category" | "theme");
+    setFilterType(event.target.value as "category" | "theme" | "content");
   };
 
   return (
@@ -65,6 +65,7 @@ const Home: React.FC = () => {
         >
           <option value="category">Category</option>
           <option value="theme">Theme</option>
+          <option value="content">Content</option>
         </select>
         <input
           type="text"

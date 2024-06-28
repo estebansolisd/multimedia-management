@@ -70,12 +70,8 @@ export const createCategory = async (newCategory: Category) => {
 };
 
 export const createTheme = async (newTheme: Theme) => {
-  try {
-    const response = await api.post('/themes', newTheme);
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
+  const response = await api.post('/themes', newTheme);
+  return response.data;
 };
 
 export const me = async () => {

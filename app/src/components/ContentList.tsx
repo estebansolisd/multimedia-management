@@ -8,7 +8,7 @@ import { VIDEO_FALLBACK } from "@/utils/constants";
 import { isVideoUrlWithExtension } from "@/utils/video-util";
 
 interface ContentListProps {
-  filterType?: "category" | "theme";
+  filterType?: "category" | "theme" | "content";
   filterValue?: string;
 }
 
@@ -73,6 +73,10 @@ const ContentList: React.FC<ContentListProps> = ({
         content.category.type
           .toLowerCase()
           .includes(filterValue.toLowerCase())) ||
+      (filterType === "content" &&
+        [content.title, content.description].some((c) =>
+          c.toLowerCase().includes(filterValue.toLowerCase())
+        )) ||
       (filterType === "theme" &&
         content.theme.name.toLowerCase().includes(filterValue.toLowerCase()))
     );

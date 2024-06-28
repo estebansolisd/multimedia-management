@@ -20,8 +20,12 @@ const CreateTheme: React.FC = () => {
       ) {
         navigate("/");
       }
-    } catch (error) {
-      console.error("Error creating theme:", error);
+    } catch (error: any) {
+      alert(
+        error?.response?.data?.message ??
+          error?.message ??
+          "Something went wrong !"
+      );
     }
   };
 
@@ -38,7 +42,9 @@ const CreateTheme: React.FC = () => {
       <h2 className="text-2xl mb-4">Create Theme</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="name" className="block text-gray-700">Name:</label>
+          <label htmlFor="name" className="block text-gray-700">
+            Name:
+          </label>
           <input
             id="name"
             type="text"
@@ -56,7 +62,10 @@ const CreateTheme: React.FC = () => {
             onChange={(e) => setAllowsImages(e.target.checked)}
             className="mr-2"
           />
-          <label htmlFor="allowsImages" className="text-gray-700 cursor-pointer">
+          <label
+            htmlFor="allowsImages"
+            className="text-gray-700 cursor-pointer"
+          >
             Allows Images
           </label>
         </div>
@@ -68,7 +77,10 @@ const CreateTheme: React.FC = () => {
             onChange={(e) => setAllowsVideos(e.target.checked)}
             className="mr-2"
           />
-          <label htmlFor="allowsVideos" className="text-gray-700 cursor-pointer">
+          <label
+            htmlFor="allowsVideos"
+            className="text-gray-700 cursor-pointer"
+          >
             Allows Videos
           </label>
         </div>
@@ -80,7 +92,9 @@ const CreateTheme: React.FC = () => {
             onChange={(e) => setAllowsTexts(e.target.checked)}
             className="mr-2"
           />
-          <label htmlFor="allowsTexts" className="text-gray-700 cursor-pointer">Allows Texts</label>
+          <label htmlFor="allowsTexts" className="text-gray-700 cursor-pointer">
+            Allows Texts
+          </label>
         </div>
         <button
           type="submit"
