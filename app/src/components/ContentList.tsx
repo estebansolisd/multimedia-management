@@ -70,12 +70,13 @@ const ContentList: React.FC<ContentListProps> = ({
     return (
       !filterValue ||
       (filterType === "category" &&
-        content.category.type.toLowerCase().includes(filterValue.toLowerCase())) ||
+        content.category.type
+          .toLowerCase()
+          .includes(filterValue.toLowerCase())) ||
       (filterType === "theme" &&
         content.theme.name.toLowerCase().includes(filterValue.toLowerCase()))
     );
   });
-
 
   const indexOfLastContent = currentPage * contentsPerPage;
   const indexOfFirstContent = indexOfLastContent - contentsPerPage;
@@ -189,8 +190,6 @@ const ContentList: React.FC<ContentListProps> = ({
     }, {} as Record<string, Record<string, Content[]>>);
   }, [currentContents]);
 
-
-
   return (
     <div>
       <h2 className="text-2xl mb-4 font-bold">Content List</h2>
@@ -202,28 +201,36 @@ const ContentList: React.FC<ContentListProps> = ({
           </span>
         ))}
       </div>
-      {Object.keys(groupedContents).map((categoryType) => (
-        <div key={categoryType} className="mb-8">
-          <h3 className="text-xl mb-2 font-semibold capitalize">Category: {categoryType}</h3>
-          {Object.keys(groupedContents[categoryType]).map((themeName) => (
-            <div key={themeName} className="mb-4">
-              <h4 className="text-lg mb-2 font-medium capitalize">Theme: {themeName}</h4>
-              <ul className="flex flex-wrap gap-4">
-                {groupedContents[categoryType][themeName].map((content) => (
-                  <li
-                    key={content._id}
-                    className="bg-white shadow-md rounded-md p-4 w-full md:w-[48%] lg:w-[32%]"
-                  >
-                    <h3 className="text-xl mb-2">{content.title}</h3>
-                    <div className="h-[300px]">{renderContent(content)}</div>
-                    <p>Credits: {content.createdBy.username}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      ))}
+      {currentContents.length ? (
+        Object.keys(groupedContents).map((categoryType) => (
+          <div key={categoryType} className="mb-8">
+            <h3 className="text-xl mb-2 font-semibold capitalize">
+              Category: {categoryType}
+            </h3>
+            {Object.keys(groupedContents[categoryType]).map((themeName) => (
+              <div key={themeName} className="mb-4">
+                <h4 className="text-lg mb-2 font-medium capitalize">
+                  Theme: {themeName}
+                </h4>
+                <ul className="flex flex-wrap gap-4">
+                  {groupedContents[categoryType][themeName].map((content) => (
+                    <li
+                      key={content._id}
+                      className="bg-white shadow-md rounded-md p-4 w-full md:w-[48%] lg:w-[32%]"
+                    >
+                      <h3 className="text-xl mb-2">{content.title}</h3>
+                      <div className="h-[300px]">{renderContent(content)}</div>
+                      <p>Credits: {content.createdBy.username}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        ))
+      ) : (
+        <div>No result have been found !</div>
+      )}
       <Pagination
         currentPage={currentPage}
         totalPages={Math.ceil(filteredContents.length / contentsPerPage)}
